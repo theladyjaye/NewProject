@@ -13,7 +13,7 @@ class Project(object):
 		
 		
 	def create(self):
-		"""docstring for create"""
+		"""Handles Virtual Host and folder creation"""
 		vhost = None
 		cfg = config.Config(self.config_file)
 		
@@ -25,6 +25,7 @@ class Project(object):
 			self.create_virtual_host(cfg)
 	
 	def create_directories(self, cfg):
+		"""Creates necessary directories"""
 		base_path = "{0}/{1}".format(cfg.project_path, self.name)
 		
 		with open(cfg.structure) as f:
@@ -48,6 +49,7 @@ class Project(object):
 		build(folders)
 		
 	def create_virtual_host(self, cfg):
+		"""Creates necessary virtual host file, modifies /etc/hosts and restarts Apache"""
 		vhost = VirtualHost(cfg.virtual_host)
 		vhost.set_params({"server_admin": cfg.email,
 		                  "document_root": "{0}/{1}/{2}".format(cfg.project_path, self.name, cfg.document_root_suffix),
@@ -67,7 +69,7 @@ class Project(object):
 		subprocess.call([cfg.apachectl, "restart"])
 
 class VirtualHost(object):
-	"""docstring for VirtualHost"""
+	"""Object representation of Apache's VirtualHost directive"""
 	def __init__(self, template):
 		self.template = template
 	
